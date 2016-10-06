@@ -2,6 +2,7 @@ import os
 from anilist import AniList
 from time import gmtime, strftime, time
 
+#If you want to use it because you need to pass the "client" to the functions, it's not necessary atm.
 Client_ID = os.getenv('ANILIST_CLIENT_ID')
 Client_Secret = os.getenv('ANILIST_CLIENT_SECRET')
 
