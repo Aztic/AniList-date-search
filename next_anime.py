@@ -2,10 +2,9 @@ import os
 from anilist import AniList
 from time import gmtime, strftime, time
 
-#If you want to use it because you need to pass the "client" to the functions, it's not necessary atm.
+#This is only necessary if you are going to use the client
 Client_ID = os.getenv('ANILIST_CLIENT_ID')
 Client_Secret = os.getenv('ANILIST_CLIENT_SECRET')
-
 client = AniList(client_id=Client_ID, client_secret=Client_Secret)
 
 
@@ -21,11 +20,12 @@ client = AniList(client_id=Client_ID, client_secret=Client_Secret)
 #else == Anime ID
 def search_thing(name, path, a_object):
 	the_list = a_object.get(path)
-	for i in the_list:
-		if name == i['title_romaji']:
-			if i['airing_status'] != 'currently airing':
-				return -1
-			return i['id']
+	if len(the_list) > 1:
+		for i in the_list:
+			if name == i['title_romaji'] or name == i['title_english'] or name == i['title_japanese']:
+				if i['airing_status'] != 'currently airing':
+					return -1
+				return i['id']
 	return 0
 
 
@@ -46,7 +46,7 @@ def search_with_id(id, a_object):
 
 #Converts the seconds until the next episode
 #to a most "readable" form
-def date_things(seconds, want_to_show, anime):
+def date_things(seconds, want_to_show, anime, want_to_return):
 	episode_date = strftime("%Y-%m-%d %H:%M:%S", gmtime(seconds))
 	if want_to_show:
 		print("The next episode of ",anime," will be on",episode_date)
@@ -59,3 +59,7 @@ def date_things(seconds, want_to_show, anime):
 	mins = int(secs/60)
 	secs -= 60*mins
 	print(days,"days ",hours,"hours ", mins,"minutes ", secs, "seconds until next episode")
+	#if you want to return the string
+	if want_to_return:
+		string_to_return = str(days) + " days " + str(hours) + " hours " + str(mins) + " minutes " + str(secs) + " seconds until next episode"
+		return string_to_return
